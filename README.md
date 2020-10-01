@@ -23,3 +23,7 @@ Note that because a validator was used on the email field, the form was invalid 
 ### Successful Change of Name and Email
 ![image](https://user-images.githubusercontent.com/26036279/94761108-39742480-0372-11eb-8e23-f1f1cd78be8d.png)
 
+## Activity 3: SQL vs NoSQL
+SQL databases, or more generically relational databases, store data in tables with a fixed schema or structure, generally describing the columns that the data fits in to, the ways tables relate to each other through relationships, and constraints placed on the data stored therein.
+
+NoSQL databases do not have a rigid schema, and instead store collections of documents. Unlike rows in a SQL table, these documents are unstructured and can have different fields, similar to a JSON or XML document (many NoSQL databases do store JSON data).
