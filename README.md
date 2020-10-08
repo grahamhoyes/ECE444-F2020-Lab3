@@ -1,7 +1,7 @@
 This repo is adapted from https://github.com/miguelgrinberg/flasky
 
 # Running in Docker
-The Dockerfile for running locally is [Dockerfile](Dockerfile). This configuration copies the app folder into the container at build time, which is not ideal for development as it requires rebuilding the container with every change. For optimal development experience, this should be replaced with a volume mount to take advantage of Flask's hot reloading.
+The Dockerfile for running locally is [Dockerfile](Dockerfile). This configuration does not copy the contents of the `app` folder into the container. The expectation is that the container will be run with a volume mount for the app contents, as shown below. The benefits are twofold: during development the only time the container needs to be rebuilt is when dependencies are updated, and Flask's development server is able to use hot reloading when you make changes locally.
 
 A docker-compose configuration is in [docker-compose.yml](docker-compose.yml). If you have `docker-compose` on your system, this simplifies the Docker commands below.
 
@@ -27,20 +27,7 @@ You can inspect the image with `docker image ls ece444-flask-lab4`:
 ![image](https://user-images.githubusercontent.com/26036279/95507310-3a631280-097f-11eb-8e79-90b95b33629b.png)
 
 ## Running
-To run the project using standalone Docker:
-
-```bash
-$ docker run -it --rm -p 5000:5000 ece444-flask-lab4:latest
-```
-
-![image](https://user-images.githubusercontent.com/26036279/95508613-48b22e00-0981-11eb-8433-5ab46e143a5b.png)
-
-Explanation:
-- `-it` attaches an interactive terminal, to monitor the output of the container. Alternatively, run `docker logs <container id>` if running in detached mode.
-- `--rm` will delete the container once it is stopped.
-- `-p 5000:5000` binds container port 5000 to host port 5000, so the service is accessible.
-
-If using `docker-compose`, run:
+Docker Compose is the recommend way to run this project, as it will take care of image name, ports, volume mounts, and most other settings for you by specifying them in [docker-compose.yml](docker-compose.yml). To run the project using Docker Compose:
 
 ```bash
 $ docker-compose up
@@ -53,6 +40,23 @@ This will attach the container and print logs to the console. To run detached, p
 `docker-compose up` does not automatically delete containers when they are killed. To remove the container, or to stop and remove it if running detached, run `docker-compose down`.
 
 Docker compose defaults container names to `<project name>_<service>_<id>`. Project name defaults to the name of the folder containing docker-compose.yml, which in my case is `lab3`. To change the project name, set the `COMPOSE_PROJECT_NAME` environment variable before running `docker-compose up`.
+
+
+To run the project using standalone Docker:
+
+```bash
+$ docker run -it --rm -p 5000:5000 -v $PWD/app/:/usr/src/app/ ece444-flask-lab4:latest python app.py
+```
+
+![image](https://user-images.githubusercontent.com/26036279/95522212-7d31e400-0999-11eb-85a7-d3df54fd58cf.png)
+
+Explanation:
+- `-it` attaches an interactive terminal, to monitor the output of the container. Alternatively, run `docker logs <container id>` if running in detached mode.
+- `--rm` will delete the container once it is stopped.
+- `-p 5000:5000` binds container port 5000 to host port 5000, so the service is accessible.
+- `-v` creates a volume mount. The first parameter must be the absolute path on the host, and the second the absolute path in the container.
+
+
 
 The app should now be live, and accessible in your browser at [localhost:5000](http://localhost:5000/).
 
