@@ -1,9 +1,9 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required, Email, ValidationError
 
 
-class NameForm(Form):
+class NameForm(FlaskForm):
     name = StringField("What is your name?", validators=[Required()])
     email = StringField(
         "What is your UofT email address?",
