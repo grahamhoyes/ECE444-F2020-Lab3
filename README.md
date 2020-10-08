@@ -1,29 +1,59 @@
 This repo is adapted from https://github.com/miguelgrinberg/flasky
 
-## Activity 1
-![image](https://user-images.githubusercontent.com/26036279/94759317-915c5c80-036d-11eb-9043-7a2f3635673f.png)
+# Running in Docker
+The Dockerfile for running locally is [Dockerfile](Dockerfile). This configuration copies the app folder into the container at build time, which is not ideal for development as it requires rebuilding the container with every change. For optimal development experience, this should be replaced with a volume mount to take advantage of Flask's hot reloading.
 
-## Activity 2
-### Landing Page
-![image](https://user-images.githubusercontent.com/26036279/94760836-94594c00-0371-11eb-8604-dffe3e3a9e39.png)
+A docker-compose configuration is in [docker-compose.yml](docker-compose.yml). If you have `docker-compose` on your system, this simplifies the Docker commands below.
 
+## Building
+To build the image with standalone Docker, from the project root run:
 
-### Name and Email Submitted
-![image](https://user-images.githubusercontent.com/26036279/94760858-a33ffe80-0371-11eb-9e85-a2111a329a22.png)
+```bash
+$ docker build -t ece444-flask-lab4:latest .
+```
 
+This will create build the container, and tag the image `ece444-flask-lab4:latest`.
 
-### Invalid Email Address (client-side validation)
-![image](https://user-images.githubusercontent.com/26036279/94760909-c2d72700-0371-11eb-9654-e8aa0480de94.png)
+If using `docker-compose`, run:
 
-### Non UofT Email
-![image](https://user-images.githubusercontent.com/26036279/94760979-ef8b3e80-0371-11eb-9230-4fc695f661b2.png)
+```bash
+$ docker-compose build
+```
 
-Note that because a validator was used on the email field, the form was invalid and hence the name stored in the session was not updated.
+This will likewise build and tag the docker container.
 
-### Successful Change of Name and Email
-![image](https://user-images.githubusercontent.com/26036279/94761108-39742480-0372-11eb-8e23-f1f1cd78be8d.png)
+You can inspect the image with `docker image ls ece444-flask-lab4`:
 
-## Activity 3: SQL vs NoSQL
-SQL databases, or more generically relational databases, store data in tables with a fixed schema or structure, generally describing the columns that the data fits in to, the ways tables relate to each other through relationships, and constraints placed on the data stored therein.
+![image](https://user-images.githubusercontent.com/26036279/95507310-3a631280-097f-11eb-8e79-90b95b33629b.png)
 
-NoSQL databases do not have a rigid schema, and instead store collections of documents. Unlike rows in a SQL table, these documents are unstructured and can have different fields, similar to a JSON or XML document (many NoSQL databases do store JSON data).
+## Running
+To run the project using standalone Docker:
+
+```bash
+$ docker run -it --rm -p 5000:5000 ece444-flask-lab4:latest
+```
+
+![image](https://user-images.githubusercontent.com/26036279/95508613-48b22e00-0981-11eb-8433-5ab46e143a5b.png)
+
+Explanation:
+- `-it` attaches an interactive terminal, to monitor the output of the container. Alternatively, run `docker logs <container id>` if running in detached mode.
+- `--rm` will delete the container once it is stopped.
+- `-p 5000:5000` binds container port 5000 to host port 5000, so the service is accessible.
+
+If using `docker-compose`, run:
+
+```bash
+$ docker-compose up
+```
+
+![image](https://user-images.githubusercontent.com/26036279/95508533-2cae8c80-0981-11eb-8228-5a5d81f25a51.png)
+
+This will attach the container and print logs to the console. To run detached, pass the `-d` flag.
+
+`docker-compose up` does not automatically delete containers when they are killed. To remove the container, or to stop and remove it if running detached, run `docker-compose down`.
+
+Docker compose defaults container names to `<project name>_<service>_<id>`. Project name defaults to the name of the folder containing docker-compose.yml, which in my case is `lab3`. To change the project name, set the `COMPOSE_PROJECT_NAME` environment variable before running `docker-compose up`.
+
+The app should now be live, and accessible in your browser at [localhost:5000](http://localhost:5000/).
+
+![image](https://user-images.githubusercontent.com/26036279/95508911-b52d2d00-0981-11eb-8421-aa591c5d92ec.png)
