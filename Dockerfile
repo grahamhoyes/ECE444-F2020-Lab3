@@ -10,5 +10,7 @@ RUN pip install -r requirements.txt
 # Copy project files
 COPY app/ /usr/src/app/
 
-# Run the app
-CMD ["python", "app.py"]
+# Copy the entrypoint
+COPY entrypoint.sh /usr/src/entrypoint.sh
+RUN chmod +x /usr/src/entrypoint.sh
+ENTRYPOINT ["/usr/src/entrypoint.sh"]

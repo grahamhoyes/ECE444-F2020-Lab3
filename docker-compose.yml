@@ -6,5 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: ece444-flask-lab4:latest
+    command: python app.py
     ports:
       - 5000:5000
+    volumes:
+      - ./app/:/usr/src/app/
