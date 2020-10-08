@@ -57,3 +57,10 @@ Docker compose defaults container names to `<project name>_<service>_<id>`. Proj
 The app should now be live, and accessible in your browser at [localhost:5000](http://localhost:5000/).
 
 ![image](https://user-images.githubusercontent.com/26036279/95508911-b52d2d00-0981-11eb-8421-aa591c5d92ec.png)
+
+# Docker vs Virtual Machines
+While Docker containers may appear to be miniature VMs, they are not. The key distinction is that virtual machines contain their own operating system kernel. User mode programs in virtual machines trap into the host OS kernel, and are then passed down to the guest OS kernel for processing system calls. Processes in Docker containers, on the other hand, interact directly with the OS kernel of the host running docker. Docker containers also share resources with the host directly, whereas VMs see virtualized hardware (with services such as Docker Swarm or Kubernetes, it is possible to constrain the resources given to a docker container).
+
+Any easy way to verify this is to run a process in a docker container (such as the web service above), and check your computer's process monitor (`htop` on linux, for example). The processes in the docker container will be visible alongside the rest of the native processes on your system, whereas processes running inside a VM are not visible to the host and vice-versa.
+
+The benefit of using Docker containers is they provide a consistent user space when running across machines, so processes don't need to worry about all dependencies being installed on every host machine. They are also much quicker to run than traditional VMs. The downside is that programs must be compatible with the host Kernel. As a result, if you run a linux-based container on Windows, under the hood Docker will be running a lightweight VM of some kind to provide a linux environment on Windows.
